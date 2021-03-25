@@ -12,7 +12,7 @@
                         <label for="description">Описание</label>
                         <textarea  v-model="post.description" class="form-control" placeholder="Leave a comment here" id="description"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Добавить</button>
+                    <button type="submit" class="btn btn-primary mt-1">Добавить</button>
                 </form>
             </div>
         </div>
@@ -23,10 +23,10 @@
             <div v-if="loading"> Загрузка... </div>
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Описание</th>
-                    <th scope="col">Кнопки</th>
+                    <th scope="col" style="width:10%">ID</th>
+                    <th scope="col" style="width:20%">Название</th>
+                    <th scope="col" style="width:40%">Описание</th>
+                    <th scope="col" style="width:30%">Кнопки</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +35,7 @@
                     <td>{{ post.title }}</td>
                     <td>{{ post.description }}</td>
                     <td>
-                        <button class="btn btn-success">Редактировать</button>
+                        <button @click="editPost(post)" class="btn btn-success">Редактировать</button>
                         <button @click="deletePost(post.id)" class="btn btn-danger">Удалить</button>
                     </td>
                 </tr>
@@ -78,7 +78,6 @@
                     title: '',
                     description: ''
                 },
-                post_id: '',
                 pagination: {},
                 edit: false,
                 loading: true,
@@ -135,8 +134,25 @@
                         })
                         .catch(error => console.log(error))
                 }  else {
-                    // Редактирование
+                    axios
+                        .put('/api/posts/'+ this.post.id, {
+                            title: this.post.title,
+                            description: this.post.description
+                        })
+                        .then(response => {
+                            this.post.title = ""
+                            this.post.description = ""
+                            this.getPosts()
+                            console.log(response)
+                        })
+                        .catch(error => console.log(error))
                 }
+            },
+            editPost(post){
+                this.edit = true
+                this.post.id = post.id
+                this.post.title = post.title
+                this.post.description = post.description
             }
         }
     }

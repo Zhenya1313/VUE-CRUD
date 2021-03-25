@@ -1924,7 +1924,6 @@ __webpack_require__.r(__webpack_exports__);
         title: '',
         description: ''
       },
-      post_id: '',
       pagination: {},
       edit: false,
       loading: true,
@@ -1987,8 +1986,27 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (error) {
           return console.log(error);
         });
-      } else {// Редактирование
+      } else {
+        axios.put('/api/posts/' + this.post.id, {
+          title: this.post.title,
+          description: this.post.description
+        }).then(function (response) {
+          _this3.post.title = "";
+          _this3.post.description = "";
+
+          _this3.getPosts();
+
+          console.log(response);
+        })["catch"](function (error) {
+          return console.log(error);
+        });
       }
+    },
+    editPost: function editPost(post) {
+      this.edit = true;
+      this.post.id = post.id;
+      this.post.title = post.title;
+      this.post.description = post.description;
     }
   }
 });
@@ -37755,7 +37773,10 @@ var render = function() {
             _vm._v(" "),
             _c(
               "button",
-              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+              {
+                staticClass: "btn btn-primary mt-1",
+                attrs: { type: "submit" }
+              },
               [_vm._v("Добавить")]
             )
           ]
@@ -37785,9 +37806,18 @@ var render = function() {
                 _c("td", [_vm._v(_vm._s(post.description))]),
                 _vm._v(" "),
                 _c("td", [
-                  _c("button", { staticClass: "btn btn-success" }, [
-                    _vm._v("Редактировать")
-                  ]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: {
+                        click: function($event) {
+                          return _vm.editPost(post)
+                        }
+                      }
+                    },
+                    [_vm._v("Редактировать")]
+                  ),
                   _vm._v(" "),
                   _c(
                     "button",
@@ -37868,13 +37898,21 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-dark" }, [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
+        _c("th", { staticStyle: { width: "10%" }, attrs: { scope: "col" } }, [
+          _vm._v("ID")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Название")]),
+        _c("th", { staticStyle: { width: "20%" }, attrs: { scope: "col" } }, [
+          _vm._v("Название")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Описание")]),
+        _c("th", { staticStyle: { width: "40%" }, attrs: { scope: "col" } }, [
+          _vm._v("Описание")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Кнопки")])
+        _c("th", { staticStyle: { width: "30%" }, attrs: { scope: "col" } }, [
+          _vm._v("Кнопки")
+        ])
       ])
     ])
   }
@@ -37915,67 +37953,8 @@ var staticRenderFns = [
         [
           _c("div", { staticClass: "container" }, [
             _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-              _vm._v("Navbar")
-            ]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "navbar-toggler",
-                attrs: {
-                  type: "button",
-                  "data-toggle": "collapse",
-                  "data-target": "#navbarNav",
-                  "aria-controls": "navbarNav",
-                  "aria-expanded": "false",
-                  "aria-label": "Toggle navigation"
-                }
-              },
-              [_c("span", { staticClass: "navbar-toggler-icon" })]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse navbar-collapse",
-                attrs: { id: "navbarNav" }
-              },
-              [
-                _c("ul", { staticClass: "navbar-nav" }, [
-                  _c("li", { staticClass: "nav-item active" }, [
-                    _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-                      _vm._v("Home "),
-                      _c("span", { staticClass: "sr-only" }, [
-                        _vm._v("(current)")
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "nav-item" }, [
-                    _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-                      _vm._v("Features")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "nav-item" }, [
-                    _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-                      _vm._v("Pricing")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "nav-item" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "nav-link disabled",
-                        attrs: { href: "#" }
-                      },
-                      [_vm._v("Disabled")]
-                    )
-                  ])
-                ])
-              ]
-            )
+              _vm._v("Vue CRUD")
+            ])
           ])
         ]
       )
